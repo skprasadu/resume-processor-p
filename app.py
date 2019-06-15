@@ -2,7 +2,6 @@ from datetime import datetime
 from wordcloud import WordCloud,STOPWORDS
 from flask import Flask, request, Response, render_template
 import textract
-from werkzeug import secure_filename
 
 app = Flask(__name__)
 
@@ -22,8 +21,8 @@ def upload():
 
     file = request.files['file']
     if file:
-        filename = secure_filename(file.filename)
-        text = textract.process(filename)
+		file.seek(0)
+        text = textract.process(file.read())
         wordcloud = wc.generate(text)
         img = BytesIO()
         wordcloud.to_image().save(img, 'PNG')
