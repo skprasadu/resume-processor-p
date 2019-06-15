@@ -22,7 +22,7 @@ def upload():
 
     file = request.files['file']
     if file:
-		filename = secure_filename(file.filename)
+        filename = secure_filename(file.filename)
         text = textract.process(filename)
         wordcloud = wc.generate(text)
         img = BytesIO()
