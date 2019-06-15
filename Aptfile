@@ -5,4 +5,3 @@ antiword
 poppler-utils 
 python-pip 
 zlib1g-dev
-swig=3.0.0
