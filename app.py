@@ -21,7 +21,7 @@ def upload():
 
     file = request.files['file']
     if file:
-		file.seek(0)
+        file.seek(0)
         text = textract.process(file.read())
         wordcloud = wc.generate(text)
         img = BytesIO()
