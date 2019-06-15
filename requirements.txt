@@ -2,4 +2,5 @@ Flask
 gunicorn
 matplotlib
 wordcloud
+werkzeug
 textract
