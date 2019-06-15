@@ -5,3 +5,14 @@ antiword
 poppler-utils 
 python-pip 
 zlib1g-dev
+libpulse-dev
+unrtf 
+pstotext 
+tesseract-ocr 
+flac 
+ffmpeg 
+lame 
+libmad0 
+libsox-fmt-mp3 
+sox 
+libjpeg-dev
