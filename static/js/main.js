@@ -46,11 +46,12 @@ $(document).ready(function () {
 					fileName = "";
 				},
 				error: function() {
-					/*$("#fileUploadError").removeClass("hide").text("An error occured!");
-					$("#files").children().last().remove();
-					$("#uploadFile").closest("form").trigger("reset");*/
-					console.log("upload error: " + error.name + ": " + error.message);
-					$('#progress').html("Failure!<br>" + error.name + ": " + error.message);
+					console.log("upload failed!");
+					//console.log(data);
+					$('.loader').css({
+						"display": "none"
+					});
+					alert('Upload failed');
 					toggleAllButtons(false);
 				},
 				data: formData,
