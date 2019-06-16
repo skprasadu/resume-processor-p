@@ -65,7 +65,7 @@ def getDocText(file):
     filename = secure_filename(file.filename)
     file.save(filename)
     
-    cmd = ['catdoc', '-d', 'utf-8', filename]
+    cmd = ['antiword', '-f', filename]
     try:
         p = Popen(cmd, stdout=PIPE)
         stdout, stderr = p.communicate()
