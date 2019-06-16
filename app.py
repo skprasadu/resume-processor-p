@@ -28,7 +28,9 @@ def upload():
     file = request.files['file']
     if file:
         if file.filename.endswith('doc'):
-            wordcloud = wc.generate(getDocText(file))
+            txt = getDocText(file)
+            print(txt)
+            wordcloud = wc.generate(txt)
         else:
             if file.filename.endswith('docx'):
                 wordcloud = wc.generate(getDocxText(file.stream))
