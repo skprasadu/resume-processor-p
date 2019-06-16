@@ -7,6 +7,7 @@ from flask import request, Response, render_template
 from io import BytesIO
 from werkzeug import secure_filename
 from subprocess import Popen, PIPE
+import os
 
 app = Flask(__name__)
 
@@ -66,6 +67,7 @@ def getDocText(file):
     try:
         p = Popen(cmd, stdout=PIPE)
         stdout, stderr = p.communicate()
+        os.remove(filename)
         return stdout.decode('utf-8', 'ignore')
     except:
         return ''
