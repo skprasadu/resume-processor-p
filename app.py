@@ -27,7 +27,7 @@ def upload():
         text = textract.process(filename)
         print(text)
         os.remove(filename)
-        wordcloud = wc.generate(text)
+        wordcloud = wc.generate(str(text))
         img = BytesIO()
         wordcloud.to_image().save(img, 'PNG')
         img.seek(0)
