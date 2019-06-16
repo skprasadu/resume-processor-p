@@ -65,16 +65,12 @@ def getDocText(file):
     filename = secure_filename(file.filename)
     file.save(filename)
     
-    (fi, fo, fe) = os.popen3('catdoc -w "%s"' % filename)
-    fi.close()
-    retval = fo.read()
-    erroroutput = fe.read()
-    fo.close()
-    fe.close()
-    if not erroroutput:
-        return retval
-    else:
-        raise OSError("Executing the command caused an error: %s" % erroroutput)
+    p = run(['catdoc'], stdout=PIPE,
+        input=filename)
+    print(p.returncode)
+    print(p.stdout)
+    return p.stdout
+
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=True)
