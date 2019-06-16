@@ -3,6 +3,7 @@ from wordcloud import WordCloud,STOPWORDS
 from flask import Flask, request, Response, render_template
 import textract
 from werkzeug import secure_filename
+from io import BytesIO
 
 app = Flask(__name__)
 
@@ -25,10 +26,9 @@ def upload():
         filename = secure_filename(file.filename)
         file.save(filename)
         text = textract.process(filename)
-        print(text)
         os.remove(filename)
         wordcloud = wc.generate(str(text))
-        img = os.BytesIO()
+        img = BytesIO()
         wordcloud.to_image().save(img, 'PNG')
         img.seek(0)
         return Response(img, mimetype='image/jpeg')
