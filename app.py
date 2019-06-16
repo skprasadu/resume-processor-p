@@ -28,7 +28,7 @@ def upload():
         print(text)
         os.remove(filename)
         wordcloud = wc.generate(str(text))
-        img = BytesIO()
+        img = os.BytesIO()
         wordcloud.to_image().save(img, 'PNG')
         img.seek(0)
         return Response(img, mimetype='image/jpeg')
