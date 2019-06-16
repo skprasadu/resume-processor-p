@@ -1,9 +1,14 @@
-import os
+from flask import Flask
+from datetime import datetime
 from wordcloud import WordCloud,STOPWORDS
-from flask import Flask, request, Response, render_template
-import textract
-from werkzeug import secure_filename
+from PyPDF2 import PdfFileReader
+from docx import Document
+from flask import request, Response, render_template
 from io import BytesIO
+import subprocess
+from subprocess import run, PIPE
+from werkzeug import secure_filename
+import os
 
 app = Flask(__name__)
 
@@ -19,20 +24,58 @@ def upload():
     new_words =open(r'./stop-words.txt').read().split()
     new_stopwords=stopwords.union(new_words)
     
-    wc = WordCloud(stopwords=new_stopwords, width=700, height=350)
+    wc = WordCloud(stopwords=new_stopwords)
 
     file = request.files['file']
     if file:
-        filename = secure_filename(file.filename)
-        file.save(filename)
-        text = textract.process(filename)
-        os.remove(filename)
-        wordcloud = wc.generate(str(text))
-        img = BytesIO()
-        wordcloud.to_image().save(img, 'PNG')
-        img.seek(0)
-        return Response(img, mimetype='image/jpeg')
+        if file.filename.endswith('doc'):
+            wordcloud = wc.generate(getDocText(file))
+        else:
+            if file.filename.endswith('docx'):
+                wordcloud = wc.generate(getDocxText(file.stream))
+            elif file.filename.endswith('pdf'):
+                wordcloud = wc.generate(getPdfText(file.stream))
+            else:
+                return "format not supported now"
+
+            img = BytesIO()
+            wordcloud.to_image().save(img, 'PNG')
+            img.seek(0)
+            return Response(img, mimetype='image/jpeg')
     return "error"
+
+def getDocxText(stream):
+    doc = Document(stream)
+    fullText = []
+    for para in doc.paragraphs:
+        fullText.append(para.text)
+    return '\n'.join(fullText)
+
+def getPdfText(stream):
+    pdfReader = PdfFileReader(stream)
+    count = pdfReader.numPages
+    totalStr = ""
+    for i in range(count):
+        page = pdfReader.getPage(i)
+        totalStr +=  page.extractText()
+        totalStr += ' '
+    return totalStr
+
+def getDocText(file):
+    filename = secure_filename(file.filename)
+    file.save(filename)
+    
+    (fi, fo, fe) = os.popen3('catdoc -w "%s"' % filename)
+    fi.close()
+    retval = fo.read()
+    erroroutput = fe.read()
+    fo.close()
+    fe.close()
+    if not erroroutput:
+        return retval
+    else:
+        raise OSError("Executing the command caused an error: %s" % erroroutput)
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=True)
+

@@ -1,5 +1,6 @@
 Flask
 gunicorn
+python-docx
+pypdf2
 matplotlib
 wordcloud
-textract

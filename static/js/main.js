@@ -41,6 +41,7 @@ $(document).ready(function () {
 					var img = document.getElementById('wordCloudBlob');
 					var url = window.URL || window.webkitURL;
 					img.src = url.createObjectURL(data);
+					alert('Upload successful');
 
 					toggleAllButtons(false);
 					fileName = "";
