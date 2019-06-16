@@ -1,4 +1,3 @@
-import os
 from wordcloud import WordCloud,STOPWORDS
 from flask import Flask, request, Response, render_template
 import textract
@@ -23,9 +22,8 @@ def upload():
     file = request.files['file']
     if file:
         filename = secure_filename(file.filename)
-        path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        file.save(path)
-        text = textract.process(path)
+        file.save(filename)
+        text = textract.process(filename)
         wordcloud = wc.generate(text)
         img = BytesIO()
         wordcloud.to_image().save(img, 'PNG')
