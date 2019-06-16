@@ -19,7 +19,7 @@ def upload():
     new_words =open(r'./stop-words.txt').read().split()
     new_stopwords=stopwords.union(new_words)
     
-    wc = WordCloud(stopwords=new_stopwords)
+    wc = WordCloud(stopwords=new_stopwords, width=700, height=350)
 
     file = request.files['file']
     if file:
