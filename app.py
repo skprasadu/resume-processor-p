@@ -5,9 +5,8 @@ from PyPDF2 import PdfFileReader
 from docx import Document
 from flask import request, Response, render_template
 from io import BytesIO
-import subprocess
-from subprocess import run, PIPE
 from werkzeug import secure_filename
+from subprocess import Popen, PIPE
 
 app = Flask(__name__)
 
@@ -37,11 +36,10 @@ def upload():
             else:
                 return "format not supported now"
 
-            img = BytesIO()
-            wordcloud.to_image().save(img, 'PNG')
-            img.seek(0)
-            return Response(img, mimetype='image/jpeg')
-    return "error"
+    img = BytesIO()
+    wordcloud.to_image().save(img, 'PNG')
+    img.seek(0)
+    return Response(img, mimetype='image/jpeg')
 
 def getDocxText(stream):
     doc = Document(stream)
@@ -64,12 +62,13 @@ def getDocText(file):
     filename = secure_filename(file.filename)
     file.save(filename)
     
-    p = run(['catdoc'], stdout=PIPE,
-        input=filename)
-    print(p.returncode)
-    print(p.stdout)
-    return p.stdout
-
+    cmd = ['catdoc', '-d', 'utf-8', filename]
+    try:
+        p = Popen(cmd, stdout=PIPE)
+        stdout, stderr = p.communicate()
+        return stdout.decode('utf-8', 'ignore')
+    except:
+        return ''
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=True)
