@@ -8,7 +8,6 @@ from io import BytesIO
 import subprocess
 from subprocess import run, PIPE
 from werkzeug import secure_filename
-import os
 
 app = Flask(__name__)
 
