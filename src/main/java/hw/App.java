@@ -80,10 +80,14 @@ public class App {
 
       // read the header
       String s;
+      ArrayList<String> headers = new ArrayList<String>();
       while (!(s = in.readLine()).equals("")) {
-          System.out.println(s);
+        headers.add(s);
+        if (s.startsWith("location:")) {
+          System.out.println(headers.get(0));
+          System.out.println("Your document can be found at: " + s.substring("location:".length()));
+        }
       }
-
       /* You can parse the JSON body for additional URLs and URI templates, but that's an exercise for the reader. This sample ignores the body. */
     } catch (IOException ex) {
       System.err.println(ex);
