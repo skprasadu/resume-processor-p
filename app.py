@@ -1,14 +1,8 @@
 from flask import Flask
-from datetime import datetime
-from wordcloud import WordCloud,STOPWORDS
-from PyPDF2 import PdfFileReader
-from docx import Document
 from flask import request, Response, render_template
 from io import BytesIO
-from werkzeug import secure_filename
-from subprocess import Popen, PIPE
-import os
-import requests
+from wordcloud import WordCloud,STOPWORDS
+from process_file import getDocText, getDocxText, getPdfText
 
 app = Flask(__name__)
 
@@ -45,48 +39,6 @@ def upload():
         return Response(img, mimetype='image/jpeg')
     else:
         raise Exception("Empty text not supported")
-
-def getDocxText(stream):
-    doc = Document(stream)
-    fullText = []
-    for para in doc.paragraphs:
-        fullText.append(para.text)
-    return '\n'.join(fullText)
-
-def getPdfText(file):
-    stream = file.stream
-    pdfReader = PdfFileReader(stream)
-    count = pdfReader.numPages
-    totalStr = ""
-    for i in range(count):
-        page = pdfReader.getPage(i)
-        totalStr +=  page.extractText()
-        totalStr += '\n'
-    if totalStr.strip() != '':
-        return totalStr
-    else:
-        return getFromOCRestful(file)
-        
-    return ''
-    
-def getFromOCRestful(file):
-    print(os.environ['OCRESTFUL_BASE_URL'])
-    print(os.environ['OCRESTFUL_API_SECRET'])    
-    
-    return ''
-
-def getDocText(file):
-    filename = secure_filename(file.filename)
-    file.save(filename)
-    
-    cmd = ['antiword', '-f', filename]
-    try:
-        p = Popen(cmd, stdout=PIPE)
-        stdout, stderr = p.communicate()
-        os.remove(filename)
-        return stdout.decode('utf-8', 'ignore')
-    except:
-        return ''
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=True)
