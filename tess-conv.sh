@@ -1,3 +1,3 @@
-convert $1 -colorspace Gray ocr.tif 
-tesseract ocr.tif $1
-cat $1.txt
+convert -density 300 ea.pdf -depth 8 -strip -background white -alpha off file.tiff
+tesseract file.tiff output.txt
+cat output.txt
