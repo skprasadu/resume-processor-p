@@ -28,6 +28,7 @@ def upload():
             txt = getDocxText(file.stream)
         elif file.filename.endswith('pdf'):
             txt = getPdfText(file)
+            #print(txt)
         else:
             raise Exception("format not supported now")
     
