@@ -1,3 +1,3 @@
-convert -density 300 ea.pdf -depth 8 -strip -background white -alpha off file.tiff
-tesseract file.tiff output.txt
-cat output.txt
+convert -density 300 $1 -depth 8 -strip -background white -alpha off $1.tiff
+tesseract $1.tiff $1
+cat $1.txt
