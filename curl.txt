@@ -1,0 +1,1 @@
+curl -X POST -H "Content-Type: application/pdf" -H "Secret: zn5CRPWVqF7v2G1hTso7g" -d "@ea.pdf" "https://api.ocrestful.com/o6igu/"
