@@ -8,6 +8,7 @@ from io import BytesIO
 from werkzeug import secure_filename
 from subprocess import Popen, PIPE
 import os
+import requests
 
 app = Flask(__name__)
 
@@ -35,7 +36,7 @@ def upload():
             if file.filename.endswith('docx'):
                 wordcloud = wc.generate(getDocxText(file.stream))
             elif file.filename.endswith('pdf'):
-                wordcloud = wc.generate(getPdfText(file.stream))
+                wordcloud = wc.generate(getPdfText(file))
             else:
                 return "format not supported now"
 
@@ -51,15 +52,27 @@ def getDocxText(stream):
         fullText.append(para.text)
     return '\n'.join(fullText)
 
-def getPdfText(stream):
+def getPdfText(file):
+    stream = file.stream
     pdfReader = PdfFileReader(stream)
     count = pdfReader.numPages
     totalStr = ""
     for i in range(count):
         page = pdfReader.getPage(i)
         totalStr +=  page.extractText()
-        totalStr += ' '
-    return totalStr
+        totalStr += '\n'
+    if totalStr.strip() != '':
+        return totalStr
+    else:
+        return getFromOCRestful(file)
+        
+    return ''
+    
+def getFromOCRestful(file):
+    print(os.environ['OCRESTFUL_BASE_URL'])
+    print(os.environ['OCRESTFUL_API_SECRET'])    
+    
+    return ''
 
 def getDocText(file):
     filename = secure_filename(file.filename)
