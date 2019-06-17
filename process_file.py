@@ -4,7 +4,6 @@ from io import BytesIO
 from werkzeug import secure_filename
 from subprocess import Popen, PIPE
 import os
-import requests
 
 def getPdfText(file):
     stream = file.stream
