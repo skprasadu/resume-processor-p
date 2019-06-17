@@ -29,21 +29,22 @@ def upload():
     file = request.files['file']
     if file:
         if file.filename.endswith('doc'):
-            txt = getDocText(file)
-            print(txt)
-            wordcloud = wc.generate(txt)
+            txt = getDocText(file)            
+        elif file.filename.endswith('docx'):
+            txt = getDocxText(file.stream)
+        elif file.filename.endswith('pdf'):
+            txt = getPdfText(file)
         else:
-            if file.filename.endswith('docx'):
-                wordcloud = wc.generate(getDocxText(file.stream))
-            elif file.filename.endswith('pdf'):
-                wordcloud = wc.generate(getPdfText(file))
-            else:
-                return "format not supported now"
-
-    img = BytesIO()
-    wordcloud.to_image().save(img, 'PNG')
-    img.seek(0)
-    return Response(img, mimetype='image/jpeg')
+            raise Exception("format not supported now")
+    
+    if txt.strip() != '':
+        wordcloud = wc.generate(txt)
+        img = BytesIO()
+        wordcloud.to_image().save(img, 'PNG')
+        img.seek(0)
+        return Response(img, mimetype='image/jpeg')
+    else:
+        raise Exception("Empty text not supported")
 
 def getDocxText(stream):
     doc = Document(stream)
