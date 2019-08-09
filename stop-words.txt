@@ -63,9 +63,10 @@ Dates Employed
 Name
 Location
 Duration yrs
-expected 
+expected
 attended
-Location 
+Location
 Jan
 Employment
 Duration
+Jan Duration
