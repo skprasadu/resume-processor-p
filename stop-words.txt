@@ -57,11 +57,11 @@ needs
 returns
 sense
 assessing
-Company
-Name
-Employment
-Duration
-Dates
-Employed
+Company Name
+Employment Duration
+Dates Employed
 Name
 Location
+Duration yrs
+expected 
+attended
